@@ -5,6 +5,7 @@ import Return from '@/shared/ui-composite/Game/ReturnFromGame';
 import MCQ from './MCQ';
 import Input from './Input';
 import TilesMode from './TilesMode';
+import Listening from './Listening';
 import useKanaStore from '@/features/Kana/store/useKanaStore';
 import {
   clearAutoLearningHandoff,
@@ -89,6 +90,7 @@ const Game = () => {
       setAutoSelectionActive('kana', true);
       clearAutoLearningHandoff();
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- existing selection bootstrap
     setIsSelectionReady(true);
   }, [replaceGroups, setAutoSelectionActive, setGameMode]);
 
@@ -112,6 +114,7 @@ const Game = () => {
     if (
       shouldShowStreakMilestoneOverlay(currentStreak, totalQuestionsAnswered)
     ) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- existing streak overlay
       setActiveMilestone(
         ENABLE_EVERY_QUESTION_AD_OVERLAY
           ? totalQuestionsAnswered
@@ -123,6 +126,7 @@ const Game = () => {
   useEffect(() => {
     if (!isSelectionReady) return;
     resetStats();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- existing session reset
     setActiveMilestone(null);
     // Track dojo and mode usage for achievements (Requirements 8.1-8.3)
     recordDojoUsed('kana');
@@ -194,7 +198,9 @@ const Game = () => {
           gameMode={gameMode}
           onQuit={handleQuit}
         />
-        {gameMode.toLowerCase() === 'pick' ? (
+        {gameMode.toLowerCase() === 'listen' ? (
+          <Listening isHidden={showStats || view !== 'playing'} />
+        ) : gameMode.toLowerCase() === 'pick' ? (
           <TilesMode isHidden={showStats || view !== 'playing'} />
         ) : gameMode.toLowerCase() === 'mcq' ? (
           <MCQ isHidden={showStats || view !== 'playing'} />

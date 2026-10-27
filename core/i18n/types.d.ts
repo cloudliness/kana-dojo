@@ -687,6 +687,18 @@ export interface MetadataTranslations {
     description: string;
     keywords: string;
   };
+  phrases: {
+    title: string;
+    titleShort: string;
+    description: string;
+    keywords: string;
+  };
+  dailyLesson: {
+    title: string;
+    titleShort: string;
+    description: string;
+    keywords: string;
+  };
   kanji: {
     title: string;
     titleShort: string;
@@ -1772,6 +1784,71 @@ export interface ResourcesTranslations {
   };
 }
 
+export interface BeginnerTranslations {
+  menu: {
+    lesson: string;
+    phrases: string;
+    reviewsDue: string;
+  };
+  audio: {
+    play: string;
+    pronunciationOff: string;
+  };
+  listening: {
+    title: string;
+    description: string;
+    prompt: string;
+    replay: string;
+    checkingVoice: string;
+    noVoice: string;
+    noVoiceHint: string;
+    ttsOff: string;
+    enableTts: string;
+    needSelection: string;
+    backToKana: string;
+    correct: string;
+    incorrect: string;
+    next: string;
+    emptyGroups: string;
+  };
+  phrases: {
+    title: string;
+    subtitle: string;
+    browse: string;
+    practice: string;
+    polite: string;
+    showAnswer: string;
+    again: string;
+    hard: string;
+    good: string;
+    easy: string;
+    due: string;
+    noneDue: string;
+    done: string;
+    back: string;
+    audio: string;
+  };
+  lesson: {
+    title: string;
+    day: string;
+    of: string;
+    kanaHeading: string;
+    phraseHeading: string;
+    start: string;
+    resume: string;
+    reviews: string;
+    reviewNow: string;
+    practicePromptKana: string;
+    practicePromptPhrase: string;
+    reveal: string;
+    complete: string;
+    nextLesson: string;
+    finishedChart: string;
+    back: string;
+    progress: string;
+  };
+}
+
 /**
  * Complete translation structure with all namespaces
  */
@@ -1797,6 +1874,7 @@ export interface Translations {
   kanaChart: KanaChartTranslations;
   conjugator: ConjugatorTranslations;
   resources: ResourcesTranslations;
+  beginner: BeginnerTranslations;
 }
 
 /**
@@ -1824,7 +1902,8 @@ export type TranslationKey =
   | `legal.${keyof LegalTranslations}`
   | `kanaChart.${keyof KanaChartTranslations}`
   | `conjugator.${keyof ConjugatorTranslations}`
-  | `resources.${keyof ResourcesTranslations}`;
+  | `resources.${keyof ResourcesTranslations}`
+  | `beginner.${keyof BeginnerTranslations}`;
 
 /**
  * Available namespaces
@@ -1850,7 +1929,8 @@ export type Namespace =
   | 'legal'
   | 'kanaChart'
   | 'conjugator'
-  | 'resources';
+  | 'resources'
+  | 'beginner';
 
 /**
  * Available languages

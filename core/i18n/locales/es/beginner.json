@@ -1,0 +1,64 @@
+{
+  "menu": {
+    "lesson": "Lección de hoy",
+    "phrases": "Amigos y familia",
+    "reviewsDue": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}"
+  },
+  "audio": {
+    "play": "Reproducir {text}",
+    "pronunciationOff": "La pronunciación está desactivada en ajustes. Actívala para oír japonés."
+  },
+  "listening": {
+    "title": "Escucha",
+    "description": "Oye un sonido kana y elige el carácter que coincide",
+    "prompt": "¿Qué carácter oíste?",
+    "replay": "Oír otra vez",
+    "checkingVoice": "Buscando una voz en japonés…",
+    "noVoice": "Este dispositivo no tiene una voz en japonés, así que el quiz de escucha no puede reproducir el sonido.",
+    "noVoiceHint": "En Android, instala una voz de texto a voz en japonés en los ajustes del sistema y vuelve.",
+    "ttsOff": "La pronunciación está desactivada, así que todavía no hay nada que escuchar.",
+    "enableTts": "Activar pronunciación",
+    "needSelection": "Elige al menos dos kana primero.",
+    "backToKana": "Elegir kana",
+    "correct": "Correcto",
+    "incorrect": "Casi. Era {kana} ({romaji}).",
+    "next": "Siguiente",
+    "emptyGroups": "Selecciona algunos grupos de kana y luego empieza Escucha desde la práctica de kana."
+  },
+  "phrases": {
+    "title": "Amigos y familia",
+    "subtitle": "Japonés cotidiano para hablar con gente que conoces.",
+    "browse": "Ver",
+    "practice": "Tarjetas",
+    "polite": "Forma cortés",
+    "showAnswer": "Ver significado",
+    "again": "Otra vez",
+    "hard": "Difícil",
+    "good": "Bien",
+    "easy": "Fácil",
+    "due": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}",
+    "noneDue": "No hay repasos pendientes",
+    "done": "Estás al día por ahora.",
+    "back": "Inicio",
+    "audio": "Escuchar"
+  },
+  "lesson": {
+    "title": "Lección de hoy",
+    "day": "Día {day}",
+    "of": "Día {day} de {total}",
+    "kanaHeading": "Kana nuevos",
+    "phraseHeading": "Di esto",
+    "start": "Empezar práctica",
+    "resume": "Continuar",
+    "reviews": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}",
+    "reviewNow": "Repasar tarjetas pendientes",
+    "practicePromptKana": "¿Qué sonido es este?",
+    "practicePromptPhrase": "¿Qué significa esto?",
+    "reveal": "Ver respuesta",
+    "complete": "Lección guardada. La siguiente empieza aquí.",
+    "nextLesson": "Siguiente lección",
+    "finishedChart": "Ya recorriste el cuadro de hiragana. Sigue repasando para que se quede.",
+    "back": "Inicio",
+    "progress": "Continuarás desde aquí la próxima vez."
+  }
+}

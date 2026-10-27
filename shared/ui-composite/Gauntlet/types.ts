@@ -15,6 +15,8 @@ export interface GauntletConfig<T> {
   // Question handling
   generateQuestion: (items: T[]) => T;
   renderQuestion: (question: T, isReverse?: boolean) => React.ReactNode;
+  /** Japanese text to speak when the learner taps the prompt. */
+  getSpeechText?: (question: T) => string;
   checkAnswer: (question: T, answer: string, isReverse?: boolean) => boolean;
   getCorrectAnswer: (question: T, isReverse?: boolean) => string;
 

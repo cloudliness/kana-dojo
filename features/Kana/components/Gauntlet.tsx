@@ -41,6 +41,7 @@ const GauntletKana: React.FC<GauntletKanaProps> = ({ onCancel }) => {
     generateQuestion: items => generateKanaQuestion(items),
     renderQuestion: (question, isReverse) =>
       isReverse ? question.romaji : question.kana,
+    getSpeechText: question => question.kana,
     checkAnswer: (question, answer, isReverse) =>
       isKanaGameAnswerCorrect(question, answer, isReverse),
     getCorrectAnswer: (question, isReverse) =>

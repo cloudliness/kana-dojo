@@ -19,6 +19,8 @@ export interface BlitzConfig<T> {
 
   // Display
   renderQuestion: (question: T, isReverse?: boolean) => React.ReactNode;
+  /** Japanese text to speak when the learner taps the prompt. */
+  getSpeechText?: (question: T) => string;
   inputPlaceholder: string;
   modeDescription: string;
 

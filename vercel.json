@@ -15,12 +15,6 @@
       "maxDuration": 10
     }
   },
-  "crons": [
-    {
-      "path": "/api/process-bug-reports",
-      "schedule": "*/20 * * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

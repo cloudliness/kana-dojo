@@ -52,6 +52,7 @@ export default function BlitzKana() {
     // Normal mode: show kana, answer is romaji
     renderQuestion: (question, isReverse) =>
       isReverse ? question.romaji : question.kana,
+    getSpeechText: question => question.kana,
     inputPlaceholder: 'Type the romaji...',
     modeDescription: 'Mode: Type (See kana → Type romaji)',
     checkAnswer: (question, answer, isReverse) =>

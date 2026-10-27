@@ -122,6 +122,21 @@ export type {
 } from './lib/autoLearningHandoff';
 
 export { default as useStatsStore } from './store/useStatsStore';
+export { default as useSrsStore } from './store/useSrsStore';
+export { default as RecallGradeButtons } from './components/RecallGradeButtons';
+export {
+  applySm2,
+  countDueCards,
+  createSrsCard,
+  isCardDue,
+  listDueIds,
+  SM2_AGAIN_DELAY_MS,
+  SM2_DAY_MS,
+  SM2_DEFAULT_EASE,
+  SM2_MIN_EASE,
+} from './lib/sm2';
+export type { RecallGrade, SrsCard } from './lib/sm2';
+export { useDueCardIds } from './lib/useDueCards';
 export { default as useSetProgressStore } from './store/useSetProgressStore';
 export { default as useAutoLearningStore } from './store/useAutoLearningStore';
 export type { AutoLearningDojo } from './store/useAutoLearningStore';

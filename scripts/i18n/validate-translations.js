@@ -38,6 +38,7 @@ const NAMESPACES = [
   'kanaChart',
   'conjugator',
   'resources',
+  'beginner',
 ];
 
 let hasErrors = false;

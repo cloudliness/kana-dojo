@@ -2,7 +2,9 @@
 import clsx from 'clsx';
 import { kana } from '@/features/Kana/data/kana';
 import { useParams } from 'next/navigation';
+// eslint-disable-next-line import/no-restricted-paths -- existing kana display preference
 import usePreferencesStore from '@/features/Preferences/store/usePreferencesStore';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 
 const sliceRanges = {
   hiraganabase: [0, 10],
@@ -40,9 +42,18 @@ const SetDictionary = () => {
               'border-b-2 border-(--border-color)',
             )}
           >
-            <p lang='ja' className='text-6xl'>
-              {kanaSubgroup.kana.join(' ')}
-            </p>
+            <div lang='ja' className='flex flex-wrap gap-2'>
+              {kanaSubgroup.kana.map((character, index) => (
+                <SpeakableKana
+                  key={`${kanaSubgroup.groupName}-${character}-${index}`}
+                  text={character}
+                >
+                  <span className='text-5xl leading-none sm:text-6xl'>
+                    {character}
+                  </span>
+                </SpeakableKana>
+              ))}
+            </div>
             <div className='flex flex-col items-start gap-2'>
               {!displayKana && (
                 <span

@@ -32,6 +32,7 @@ import {
   useTilesModeActionKey,
 } from '@/shared/ui-composite/Game/TilesModeShared';
 import TilesModeGrid from '@/shared/ui-composite/Game/TilesModeGrid';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 import useClassicSessionStore from '@/shared/store/useClassicSessionStore';
 import { useTilesModeKeyboardSelection } from '@/shared/hooks/game/useTilesModeKeyboardSelection';
 
@@ -522,22 +523,29 @@ const KanaTilesMode = ({
           {/* Word Display */}
           <div
             className={getGlassModeClassName(
-              'flex flex-row items-center gap-1',
+              'flex flex-row flex-wrap items-center justify-center gap-1',
               isGlassMode,
             )}
           >
-            <motion.p
-              className={clsx(
-                'sm:text-8xl',
-                !isReverse && wordData.wordChars.length === 3
-                  ? 'text-6xl'
-                  : 'text-7xl',
-              )}
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              {wordData.wordChars.join('')}
-            </motion.p>
+            {wordData.wordChars.map((char, index) => (
+              <SpeakableKana
+                key={`${char}-${index}`}
+                text={isReverse ? (wordData.answerChars[index] ?? char) : char}
+              >
+                <motion.span
+                  className={clsx(
+                    'sm:text-8xl',
+                    !isReverse && wordData.wordChars.length === 3
+                      ? 'text-6xl'
+                      : 'text-7xl',
+                  )}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                >
+                  {char}
+                </motion.span>
+              </SpeakableKana>
+            ))}
           </div>
 
           <TilesModeGrid
@@ -569,7 +577,18 @@ const KanaTilesMode = ({
               : handleCheck
         }
         canCheck={canCheck}
-        feedbackContent={wordData.answerChars.join('')}
+        feedbackContent={
+          <span className='inline-flex items-center gap-2'>
+            <span>{wordData.answerChars.join('')}</span>
+            <SpeakableKana
+              text={(isReverse
+                ? wordData.answerChars
+                : wordData.wordChars
+              ).join('')}
+              iconOnly
+            />
+          </span>
+        }
         buttonRef={buttonRef}
       />
 

@@ -4,7 +4,11 @@ import { useEffect, useState, useRef, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from '@/core/i18n/routing';
 import { Random } from 'random-js';
-import { useClick, useCorrect, useError } from '@/shared/hooks/generic/useAudio';
+import {
+  useClick,
+  useCorrect,
+  useError,
+} from '@/shared/hooks/generic/useAudio';
 import { shuffle } from '@/shared/utils/shuffle';
 import { saveSession } from '@/shared/utils/gauntletStats';
 import useGauntletSettingsStore from '@/shared/store/useGauntletSettingsStore';
@@ -138,6 +142,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
     selectedSets,
     generateQuestion: _generateQuestion,
     renderQuestion,
+    getSpeechText,
     checkAnswer,
     getCorrectAnswer,
     generateOptions,
@@ -427,9 +432,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
       };
 
       setSessionStats(stats);
-      setEndedReason(
-        actualEndedReason ?? (completed ? 'completed' : 'failed'),
-      );
+      setEndedReason(actualEndedReason ?? (completed ? 'completed' : 'failed'));
 
       // Save to storage
       const { isNewBest: newBest } = await saveSession(stats);
@@ -618,7 +621,9 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
       if (!currentQuestion) return;
 
       recordAnswerTime();
-      const prompt = String(renderQuestion(currentQuestion.item, isReverseActive));
+      const prompt = String(
+        renderQuestion(currentQuestion.item, isReverseActive),
+      );
       const expected = getCorrectOption
         ? getCorrectOption(currentQuestion.item, isReverseActive)
         : getCorrectAnswer(currentQuestion.item, isReverseActive);
@@ -812,6 +817,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
     if (phase !== 'pregame') return;
     if (items.length === 0) return;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- existing auto-start
     setHasAutoStarted(true);
     handleStart();
   }, [hasAutoStarted, phase, items.length, handleStart]);
@@ -859,6 +865,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
       maxLives={maxLives}
       currentQuestion={currentQuestion?.item || null}
       renderQuestion={renderQuestion}
+      getSpeechText={getSpeechText}
       isReverseActive={isReverseActive ?? false}
       shuffledOptions={shuffledOptions}
       renderOption={renderOption}
@@ -874,4 +881,3 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
     />
   );
 }
-

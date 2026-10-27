@@ -11,6 +11,7 @@ import {
   useAutoLearningStore,
 } from '@/features/Progress';
 import MasteryBar from '@/shared/ui/components/MasteryBar';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 
 interface KanaRowCardProps {
   kanaGroup: KanaGroup;
@@ -95,12 +96,19 @@ const KanaRowCard = ({ kanaGroup, globalIndex }: KanaRowCardProps) => {
       </button>
 
       {/* Kana row (large) + Romaji row (smaller) */}
-      <div className='flex w-full flex-col items-start gap-1'>
-        <div
-          className='text-[2.1rem] font-normal tracking-wide text-(--main-color) sm:text-[2.5rem]'
-          lang='ja'
-        >
-          {renderSeparatedText(kanaGroup.kana, 'text-(--border-color)')}
+      <div className='flex w-full flex-col items-start gap-2'>
+        <div className='flex flex-wrap gap-1' lang='ja'>
+          {kanaGroup.kana.map((character, index) => (
+            <SpeakableKana
+              key={`${character}-${index}`}
+              text={character}
+              label={`Play ${character}`}
+            >
+              <span className='text-[2.1rem] leading-none font-normal sm:text-[2.5rem]'>
+                {character}
+              </span>
+            </SpeakableKana>
+          ))}
         </div>
         <div className='text-[1.6rem] font-normal tracking-wide text-(--secondary-color)'>
           {renderSeparatedText(kanaGroup.romanji, 'text-(--border-color)')}

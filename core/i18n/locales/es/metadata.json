@@ -36,6 +36,18 @@
     "description": "Master every Hiragana and Katakana character with the Kana Gauntlet. Comprehensive practice for all Japanese kana.",
     "keywords": "kana mastery, hiragana mastery, katakana mastery, comprehensive kana practice"
   },
+  "phrases": {
+    "title": "Frases de amigos y familia | KanaDojo",
+    "titleShort": "Amigos y familia",
+    "description": "Japonés cotidiano para hablar con amigos y familia. Saludos, agradecimientos y frases diarias con romaji, inglés y audio, con repaso espaciado.",
+    "keywords": "frases japonesas casuales, japonés para amigos y familia, conversación japonesa para principiantes"
+  },
+  "dailyLesson": {
+    "title": "Lección de hoy - Hiragana para principiantes | KanaDojo",
+    "titleShort": "Lección de hoy",
+    "description": "Un camino diario para principiantes por el hiragana en orden de cuadro, con frases cotidianas y repasos espaciados guardados en este dispositivo.",
+    "keywords": "lección diaria de japonés, aprender hiragana en orden, práctica de hiragana para principiantes"
+  },
   "kanji": {
     "title": "Kanji Dojo - Learn Japanese Kanji Characters by JLPT Level",
     "titleShort": "Kanji Dojo - Learn Japanese Kanji",

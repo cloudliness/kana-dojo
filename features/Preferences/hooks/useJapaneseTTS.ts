@@ -1,5 +1,11 @@
 'use client';
-import { useCallback, useState, useEffect, useRef } from 'react';
+import {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  useSyncExternalStore,
+} from 'react';
 import { useAudioPreferences } from '@/features/Preferences';
 
 interface JapaneseVoice {
@@ -14,6 +20,7 @@ interface TTSState {
   availableVoices: JapaneseVoice[];
   currentVoice: JapaneseVoice | null;
   hasJapaneseVoices: boolean;
+  voicesReady: boolean;
 }
 
 export const useJapaneseTTS = () => {
@@ -28,6 +35,7 @@ export const useJapaneseTTS = () => {
     availableVoices: [],
     currentVoice: null,
     hasJapaneseVoices: false,
+    voicesReady: false,
   });
 
   // Use ref to store current voice for access in callbacks without stale closures
@@ -39,12 +47,13 @@ export const useJapaneseTTS = () => {
     currentVoiceRef.current = state.currentVoice;
   }, [state.currentVoice]);
 
-  // SSR-safe check for browser environment
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // SSR-safe check for browser environment. The server snapshot stays false
+  // so the first render matches, then the client snapshot flips to true.
+  const isClient = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
 
   // Detect Firefox for special handling
   const isFirefox = useRef(false);
@@ -56,7 +65,19 @@ export const useJapaneseTTS = () => {
 
   // Check browser support and load voices
   useEffect(() => {
-    if (!isClient || !('speechSynthesis' in window)) return;
+    if (!isClient) return;
+
+    if (!('speechSynthesis' in window)) {
+      const unsupportedTimer = setTimeout(() => {
+        setState((prev: TTSState) => ({
+          ...prev,
+          isSupported: false,
+          hasJapaneseVoices: false,
+          voicesReady: true,
+        }));
+      }, 0);
+      return () => clearTimeout(unsupportedTimer);
+    }
 
     // Assume TTS is supported in modern browsers
     const isSupported = true;
@@ -111,6 +132,7 @@ export const useJapaneseTTS = () => {
           availableVoices: japaneseVoices,
           currentVoice: newCurrentVoice,
           hasJapaneseVoices,
+          voicesReady: true,
         }));
 
         // Update ref immediately to avoid race conditions
@@ -134,6 +156,7 @@ export const useJapaneseTTS = () => {
             availableVoices: [fallbackJapaneseVoice],
             currentVoice: fallbackJapaneseVoice,
             hasJapaneseVoices: false,
+            voicesReady: true,
           }));
           currentVoiceRef.current = fallbackJapaneseVoice;
         }
@@ -157,7 +180,14 @@ export const useJapaneseTTS = () => {
         setTimeout(loadVoices, 500);
       }
 
+      const voicesReadyTimeout = window.setTimeout(() => {
+        setState((prev: TTSState) =>
+          prev.voicesReady ? prev : { ...prev, voicesReady: true },
+        );
+      }, 2500);
+
       return () => {
+        window.clearTimeout(voicesReadyTimeout);
         speechSynthesis.removeEventListener('voiceschanged', loadVoices);
       };
     }
@@ -461,5 +491,6 @@ export const useJapaneseTTS = () => {
     availableVoices: state.availableVoices,
     currentVoice: state.currentVoice,
     hasJapaneseVoices: state.hasJapaneseVoices,
+    voicesReady: state.voicesReady,
   };
 };

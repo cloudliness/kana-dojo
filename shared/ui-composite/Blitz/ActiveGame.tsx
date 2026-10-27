@@ -9,6 +9,7 @@ import { buttonBorderStyles } from '@/shared/utils/styles';
 import { useThemePreferences } from '@/features/Preferences';
 import { cn } from '@/shared/utils/utils';
 import type { BlitzGameMode, GoalTimer, AddGoalFn } from './types';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 
 interface ActiveGameProps<T> {
   // Timer
@@ -20,6 +21,7 @@ interface ActiveGameProps<T> {
   // Question
   currentQuestion: T | null;
   renderQuestion: (question: T, isReverse?: boolean) => React.ReactNode;
+  getSpeechText?: (question: T) => string;
   isReverseActive: boolean;
 
   // Game mode
@@ -76,6 +78,7 @@ export default function ActiveGame<T>({
   challengeDuration,
   currentQuestion,
   renderQuestion,
+  getSpeechText,
   isReverseActive,
   gameMode,
   inputPlaceholder,
@@ -161,6 +164,11 @@ export default function ActiveGame<T>({
         <QuestionDisplay
           currentQuestion={currentQuestion}
           renderQuestion={renderQuestion}
+          speechText={
+            currentQuestion && getSpeechText
+              ? getSpeechText(currentQuestion)
+              : null
+          }
           isReverseActive={isReverseActive}
           lastAnswerCorrect={lastAnswerCorrect}
           gameMode={gameMode}
@@ -272,6 +280,7 @@ function GameHeader({
 function QuestionDisplay<T>({
   currentQuestion,
   renderQuestion,
+  speechText,
   isReverseActive,
   lastAnswerCorrect,
   gameMode,
@@ -280,6 +289,7 @@ function QuestionDisplay<T>({
 }: {
   currentQuestion: T | null;
   renderQuestion: (question: T, isReverse?: boolean) => React.ReactNode;
+  speechText: string | null;
   isReverseActive: boolean;
   lastAnswerCorrect: boolean | null;
   gameMode: BlitzGameMode;
@@ -305,8 +315,14 @@ function QuestionDisplay<T>({
               lastAnswerCorrect === null && 'text-(--main-color)',
             )}
           >
-            {currentQuestion &&
-              renderQuestion(currentQuestion, isReverseActive)}
+            {currentQuestion && speechText ? (
+              <SpeakableKana text={speechText}>
+                {renderQuestion(currentQuestion, isReverseActive)}
+              </SpeakableKana>
+            ) : (
+              currentQuestion &&
+              renderQuestion(currentQuestion, isReverseActive)
+            )}
           </div>
         </div>
       </div>
@@ -534,4 +550,3 @@ function GoalTimersSidebar({
     </div>
   );
 }
-

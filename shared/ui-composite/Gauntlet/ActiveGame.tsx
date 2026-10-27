@@ -24,6 +24,7 @@ import Stars from '@/shared/ui-composite/Game/Stars';
 import GameScoreBar from '@/shared/ui-composite/Game/GameScoreBar';
 import { useClick } from '@/shared/hooks/generic/useAudio';
 import { cn } from '@/shared/utils/utils';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 import { useThemePreferences } from '@/features/Preferences';
 import type { GauntletGameMode } from './types';
 
@@ -230,6 +231,7 @@ interface ActiveGameProps<T> {
   // Question display
   currentQuestion: T | null;
   renderQuestion: (question: T, isReverse?: boolean) => React.ReactNode;
+  getSpeechText?: (question: T) => string;
   isReverseActive: boolean;
 
   // Pick mode options
@@ -267,6 +269,7 @@ export default function ActiveGame<T>({
   maxLives,
   currentQuestion,
   renderQuestion,
+  getSpeechText,
   isReverseActive,
   shuffledOptions,
   renderOption,
@@ -300,6 +303,7 @@ export default function ActiveGame<T>({
 
   // Reset state when question changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- existing question reset
     setPlacedTiles([]);
     setBottomBarState('check');
     setIsChecking(false);
@@ -548,7 +552,13 @@ export default function ActiveGame<T>({
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
               >
-                {renderQuestion(currentQuestion, isReverseActive)}
+                {getSpeechText ? (
+                  <SpeakableKana text={getSpeechText(currentQuestion)}>
+                    {renderQuestion(currentQuestion, isReverseActive)}
+                  </SpeakableKana>
+                ) : (
+                  renderQuestion(currentQuestion, isReverseActive)
+                )}
               </motion.div>
             </div>
 
@@ -719,4 +729,3 @@ export default function ActiveGame<T>({
     </div>
   );
 }
-

@@ -17,6 +17,7 @@ import { useSmartReverseMode } from '@/shared/hooks/game/useSmartReverseMode';
 import { useAdaptiveOptionCount } from '@/shared/hooks/game/useAdaptiveOptionCount';
 import useClassicSessionStore from '@/shared/store/useClassicSessionStore';
 import { getUniqueIncorrectOptions } from '@/features/Kana/lib/getUniqueIncorrectOptions';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 
 const random = new Random();
 
@@ -162,9 +163,7 @@ const KanaMCQ = ({ isHidden }: KanaMCQProps) => {
   const selectedPairs2 = useMemo<Record<string, string>>(
     () =>
       Object.fromEntries(
-        selectedRomaji
-          .map((key, i) => [key, selectedKana[i] ?? ''])
-          .reverse(),
+        selectedRomaji.map((key, i) => [key, selectedKana[i] ?? '']).reverse(),
       ),
     [selectedRomaji, selectedKana],
   );
@@ -214,9 +213,7 @@ const KanaMCQ = ({ isHidden }: KanaMCQProps) => {
         void _;
         return getUniqueIncorrectOptions(
           correctRomajiChar,
-          Object.values(incorrectPairs).sort(
-            () => random.real(0, 1) - 0.5,
-          ),
+          Object.values(incorrectPairs).sort(() => random.real(0, 1) - 0.5),
           incorrectCount,
         );
       } else {
@@ -225,9 +222,7 @@ const KanaMCQ = ({ isHidden }: KanaMCQProps) => {
         void _;
         return getUniqueIncorrectOptions(
           correctKanaCharReverse,
-          Object.values(incorrectPairs).sort(
-            () => random.real(0, 1) - 0.5,
-          ),
+          Object.values(incorrectPairs).sort(() => random.real(0, 1) - 0.5),
           incorrectCount,
         );
       }
@@ -492,7 +487,13 @@ const KanaMCQ = ({ isHidden }: KanaMCQProps) => {
     >
       {/* <GameIntel gameMode='mcq' /> */}
       <div className='flex flex-row items-center gap-1'>
-        <p className='text-8xl font-medium sm:text-9xl'>{displayChar}</p>
+        <SpeakableKana
+          text={isReverse ? correctKanaCharReverse : correctKanaChar}
+        >
+          <span className='text-8xl font-medium sm:text-9xl'>
+            {displayChar}
+          </span>
+        </SpeakableKana>
       </div>
       {/* First row - always 3 options */}
       <div className='flex w-full flex-row gap-5 sm:justify-evenly sm:gap-0'>

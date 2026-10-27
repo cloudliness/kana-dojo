@@ -4,7 +4,11 @@ import { kana } from '@/features/Kana/data/kana';
 import useKanaStore from '@/features/Kana/store/useKanaStore';
 import { motion } from 'framer-motion';
 import clsx from 'clsx';
-import { useClick, useCorrect, useError } from '@/shared/hooks/generic/useAudio';
+import {
+  useClick,
+  useCorrect,
+  useError,
+} from '@/shared/hooks/generic/useAudio';
 // import GameIntel from '@/shared/ui-composite/Game/GameIntel';
 import { useStatsStore } from '@/features/Progress';
 import { useShallow } from 'zustand/react/shallow';
@@ -18,6 +22,7 @@ import useClassicSessionStore from '@/shared/store/useClassicSessionStore';
 import { useAdaptiveTargetLength } from '@/shared/hooks/game/useAdaptiveTargetLength';
 import { useThemePreferences } from '@/features/Preferences';
 import { cn } from '@/shared/utils/utils';
+import SpeakableKana from '@/shared/ui-composite/audio/SpeakableKana';
 import { shouldSuppressContinueKeyboardShortcut } from '@/shared/utils/game/continueShortcutGuard';
 
 // Get the global adaptive selector for weighted character selection
@@ -141,7 +146,12 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
   const buildTargetPair = useCallback(() => {
     const sourceArray = isReverse ? selectedRomaji : selectedKana;
     if (sourceArray.length === 0) {
-      return { correctChar: '', targetChar: '', promptParts: [], answerParts: [] };
+      return {
+        correctChar: '',
+        targetChar: '',
+        promptParts: [],
+        answerParts: [],
+      };
     }
 
     const used = new Set<string>();
@@ -180,13 +190,17 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
   const answerParts = pairData.answerParts;
   const pauseTimer = useCallback(() => {
     if (answerStartTimeRef.current !== null) {
-      elapsedTimeMsRef.current += performance.now() - answerStartTimeRef.current;
+      elapsedTimeMsRef.current +=
+        performance.now() - answerStartTimeRef.current;
       answerStartTimeRef.current = null;
     }
   }, []);
   const getElapsedTimeMs = useCallback(() => {
     if (answerStartTimeRef.current !== null) {
-      return elapsedTimeMsRef.current + (performance.now() - answerStartTimeRef.current);
+      return (
+        elapsedTimeMsRef.current +
+        (performance.now() - answerStartTimeRef.current)
+      );
     }
     return elapsedTimeMsRef.current;
   }, []);
@@ -220,10 +234,7 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
       const isSpace = event.code === 'Space' || event.key === ' ';
       const isContinueShortcut = isEnter || isSpace;
 
-      if (
-        isContinueShortcut &&
-        shouldSuppressContinueKeyboardShortcut()
-      ) {
+      if (isContinueShortcut && shouldSuppressContinueKeyboardShortcut()) {
         event.preventDefault();
         return;
       }
@@ -409,21 +420,23 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
           isGlassMode && 'rounded-xl bg-(--card-color) px-4 py-2',
         )}
       >
-        <motion.p
-          className='text-7xl font-medium sm:text-8xl'
-          initial={{ opacity: 0, x: 30, scale: 0.95 }}
-          animate={{ opacity: 1, x: 0, scale: 1 }}
-          transition={{
-            type: 'spring',
-            stiffness: 150,
-            damping: 20,
-            mass: 1,
-            duration: 0.5,
-          }}
-          key={correctChar}
-        >
-          {correctChar}
-        </motion.p>
+        <SpeakableKana text={isReverse ? targetChar : correctChar}>
+          <motion.span
+            className='text-7xl font-medium sm:text-8xl'
+            initial={{ opacity: 0, x: 30, scale: 0.95 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{
+              type: 'spring',
+              stiffness: 150,
+              damping: 20,
+              mass: 1,
+              duration: 0.5,
+            }}
+            key={correctChar}
+          >
+            {correctChar}
+          </motion.span>
+        </SpeakableKana>
       </div>
       <textarea
         ref={inputRef}
@@ -462,7 +475,15 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
         state={bottomBarState}
         onAction={showContinue ? handleContinue : handleCheck}
         canCheck={canCheck}
-        feedbackContent={targetChar}
+        feedbackContent={
+          <span className='inline-flex items-center gap-2'>
+            <span>{targetChar}</span>
+            <SpeakableKana
+              text={isReverse ? targetChar : correctChar}
+              iconOnly
+            />
+          </span>
+        }
         buttonRef={buttonRef}
         hideRetry
         clearWrongFeedbackSignal={clearWrongFeedbackSignal}
@@ -476,4 +497,3 @@ const InputGame = ({ isHidden, isReverse = false }: InputGameProps) => {
 };
 
 export default InputGame;
-

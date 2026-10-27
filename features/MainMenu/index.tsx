@@ -1,9 +1,8 @@
 'use client';
-import { Fragment, lazy, Suspense, useState, useEffect } from 'react';
+import { Fragment, lazy, Suspense, useSyncExternalStore } from 'react';
 import { Link } from '@/core/i18n/routing';
 import KanaDojoBanner from './KanaDojoBanner';
 import Info from '@/shared/ui-composite/Menu/Info';
-import NightlyBanner from '@/shared/ui-composite/Modals/NightlyBanner';
 import {
   ScrollText,
   FileLock2,
@@ -20,21 +19,33 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faDiscord, faGithub } from '@fortawesome/free-brands-svg-icons';
 import clsx from 'clsx';
 import { useClick } from '@/shared/hooks/generic/useAudio';
+import { useTranslations } from 'next-intl';
+import { useDueCardIds } from '@/features/Progress';
 import { useThemePreferences } from '@/features/Preferences';
 import useDecorationsStore from '@/shared/store/useDecorationsStore';
 import { useMediaQuery } from 'react-responsive';
 
-const Decorations = lazy(() => import('@/shared/ui-composite/Decorations/Decorations'));
+const Decorations = lazy(
+  () => import('@/shared/ui-composite/Decorations/Decorations'),
+);
 
 const USE_NEW_DESIGN = false;
 
+const subscribeToNothing = () => () => {};
+const useIsClient = () =>
+  useSyncExternalStore(
+    subscribeToNothing,
+    () => true,
+    () => false,
+  );
+
 const MainMenu = () => {
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsClient();
   const isLG = useMediaQuery({ minWidth: 1024 });
 
   const { theme, setTheme, isGlassMode } = useThemePreferences();
 
-  const characterTileClassName = (delay?: string, floatDistance?: string) =>
+  const characterTileClassName = (delay?: string) =>
     clsx(
       'inline-flex h-12 w-12 items-center justify-center rounded-2xl',
       'bg-(--secondary-color) group-hover:bg-(--main-color) text-(--background-color)',
@@ -43,11 +54,12 @@ const MainMenu = () => {
       'active:border-b-0 active:translate-y-[6px] active:mb-[6px]',
       'motion-safe:animate-float',
       delay,
-      // `[--float-distance:${floatDistance}]`,
       `[--float-distance:-4px]`,
     );
 
   const { playClick } = useClick();
+  const t = useTranslations('beginner');
+  const reviewsDue = useDueCardIds().length;
 
   const expandDecorations = useDecorationsStore(
     state => state.expandDecorations,
@@ -56,24 +68,6 @@ const MainMenu = () => {
     state => state.toggleExpandDecorations,
   );
 
-  const [showBanner, setShowBanner] = useState(false);
-
-  useEffect(() => {
-    // 1. Check if the user has already dismissed the banner
-    const hasDismissed = localStorage.getItem('nightly_banner_dismissed');
-
-    // Only show if they haven't dismissed it yet
-    if (!hasDismissed) {
-      setShowBanner(true);
-    }
-  }, []);
-
-  const handleDismiss = () => {
-    localStorage.setItem('nightly_banner_dismissed', 'true');
-  };
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
   const links = [
     {
       name_en: 'Kana',
@@ -182,7 +176,7 @@ const MainMenu = () => {
               }}
               className={clsx(
                 'inline-flex sm:hidden',
-                'duration-250 hover:cursor-pointer hover:scale-105',
+                'duration-250 hover:scale-105 hover:cursor-pointer',
                 'active:scale-100 active:duration-225',
                 'fill-current text-(--secondary-color) hover:text-(--main-color)',
               )}
@@ -211,7 +205,7 @@ const MainMenu = () => {
               icon={faDiscord}
               size='2x'
               className={clsx(
-                'duration-250 hover:cursor-pointer hover:scale-105',
+                'duration-250 hover:scale-105 hover:cursor-pointer',
                 'active:scale-100 active:duration-225',
                 'md:hidden',
                 'text-(--secondary-color) hover:text-(--main-color)',
@@ -225,7 +219,7 @@ const MainMenu = () => {
               icon={faGithub}
               size='2x'
               className={clsx(
-                'duration-250 hover:cursor-pointer hover:scale-105',
+                'duration-250 hover:scale-105 hover:cursor-pointer',
                 'active:scale-100 active:duration-225',
                 'text-(--secondary-color) hover:text-(--main-color)',
               )}
@@ -242,18 +236,18 @@ const MainMenu = () => {
               }}
               className={clsx(
                 'hidden sm:inline-flex',
-                'duration-250 hover:cursor-pointer hover:scale-105',
+                'duration-250 hover:scale-105 hover:cursor-pointer',
                 'active:scale-100 active:duration-225',
-                ' text-(--secondary-color) hover:text-(--main-color)',
+                'text-(--secondary-color) hover:text-(--main-color)',
               )}
               aria-label='Report a bug'
             >
-              <Bug size={32}  />
+              <Bug size={32} />
             </button>
             <Heart
               size={32}
               className={clsx(
-                'duration-250 hover:cursor-pointer hover:scale-105',
+                'duration-250 hover:scale-105 hover:cursor-pointer',
                 'active:scale-100 active:duration-225',
                 'animate-bounce fill-current text-red-500',
               )}
@@ -267,72 +261,133 @@ const MainMenu = () => {
         <div className='pointer-events-auto w-full'>
           <Info />
         </div>
-        <div className={clsx(
-          'pointer-events-auto w-full rounded-2xl',
-          USE_NEW_DESIGN
-            ? 'border-4 border-(--border-color) bg-(--card-color) overflow-hidden'
-            : 'border-1 border-(--border-color) bg-(--background-color) p-1'
-        )}>
-          <div className={clsx(
-            'rounded-2xl w-full',
+        <div
+          className={clsx(
+            'pointer-events-auto w-full rounded-2xl',
             USE_NEW_DESIGN
-              ? 'flex flex-col md:flex-row'
-              : 'bg-(--card-color) flex flex-col md:flex-row duration-250 transition-all ease-in-out'
-          )}>
-          {links.map((link, i) => (
-            <Fragment key={i}>
-              <Link
-                href={link.href}
-                prefetch
-                className={clsx('group w-full', !USE_NEW_DESIGN && 'overflow-hidden')}
-              >
-                <button
+              ? 'overflow-hidden border-4 border-(--border-color) bg-(--card-color)'
+              : 'border-1 border-(--border-color) bg-(--background-color) p-1',
+          )}
+        >
+          <div
+            className={clsx(
+              'w-full rounded-2xl',
+              USE_NEW_DESIGN
+                ? 'flex flex-col md:flex-row'
+                : 'flex flex-col bg-(--card-color) transition-all duration-250 ease-in-out md:flex-row',
+            )}
+          >
+            {links.map((link, i) => (
+              <Fragment key={i}>
+                <Link
+                  href={link.href}
+                  prefetch
                   className={clsx(
-                    'flex h-full w-full text-2xl',
-                    'items-center gap-3',
-                    'justify-start md:justify-center',
-                    'py-8',
-                    mobileLabelInset,
-                    'md:pl-0',
-                    'group',
-                    'hover:cursor-pointer',
-                    USE_NEW_DESIGN
-                      ? 'hover:bg-(--border-color)'
-                      : 'border-(--border-color) md:border-b-4 md:hover:border-(--main-color)/80 hover:bg-(--border-color)',
-                    !USE_NEW_DESIGN && i === 0 && 'rounded-tl-2xl rounded-bl-2xl',
-                    !USE_NEW_DESIGN && i === links.length - 1 && 'rounded-tr-2xl rounded-br-2xl',
+                    'group w-full',
+                    !USE_NEW_DESIGN && 'overflow-hidden',
                   )}
-                  onClick={() => playClick()}
                 >
-                  <span
-                    lang='ja'
-                    className={characterTileClassName(
-                      i === 0
-                        ? '[animation-delay:0ms]'
-                        : i === 1
-                          ? '[animation-delay:800ms]'
-                          : '[animation-delay:1600ms]',
+                  <button
+                    className={clsx(
+                      'flex h-full w-full text-2xl',
+                      'items-center gap-3',
+                      'justify-start md:justify-center',
+                      'py-8',
+                      mobileLabelInset,
+                      'md:pl-0',
+                      'group',
+                      'hover:cursor-pointer',
+                      USE_NEW_DESIGN
+                        ? 'hover:bg-(--border-color)'
+                        : 'border-(--border-color) hover:bg-(--border-color) md:border-b-4 md:hover:border-(--main-color)/80',
+                      !USE_NEW_DESIGN &&
+                        i === 0 &&
+                        'rounded-tl-2xl rounded-bl-2xl',
+                      !USE_NEW_DESIGN &&
+                        i === links.length - 1 &&
+                        'rounded-tr-2xl rounded-br-2xl',
                     )}
+                    onClick={() => playClick()}
                   >
-                    {link.name_ja}
-                  </span>
-                  <span lang='en' className='leading-none'>
-                    {link.name_en}
-                  </span>
-                </button>
-              </Link>
+                    <span
+                      lang='ja'
+                      className={characterTileClassName(
+                        i === 0
+                          ? '[animation-delay:0ms]'
+                          : i === 1
+                            ? '[animation-delay:800ms]'
+                            : '[animation-delay:1600ms]',
+                      )}
+                    >
+                      {link.name_ja}
+                    </span>
+                    <span lang='en' className='leading-none'>
+                      {link.name_en}
+                    </span>
+                  </button>
+                </Link>
 
-              {i < links.length - 1 && (
-                <div
-                  className={clsx(
-                    'md:h-auto md:w-0 md:border-l-1',
-                    'border-(--border-color)',
-                    'w-full border-t-1 border-(--border-color)',
-                  )}
-                />
-              )}
-            </Fragment>
-          ))}
+                {i < links.length - 1 && (
+                  <div
+                    className={clsx(
+                      'md:h-auto md:w-0 md:border-l-1',
+                      'border-(--border-color)',
+                      'w-full border-t-1 border-(--border-color)',
+                    )}
+                  />
+                )}
+              </Fragment>
+            ))}
+          </div>
+        </div>
+        <div
+          className={clsx(
+            'pointer-events-auto mt-3 w-full rounded-2xl border-1 border-(--border-color) bg-(--background-color) p-1',
+          )}
+        >
+          <div className='flex w-full flex-col rounded-2xl bg-(--card-color) md:flex-row'>
+            {[
+              {
+                name: t('menu.lesson'),
+                nameJa: '今',
+                href: '/lesson',
+                badge: reviewsDue > 0 ? reviewsDue : null,
+              },
+              {
+                name: t('menu.phrases'),
+                nameJa: '友',
+                href: '/phrases',
+                badge: null,
+              },
+            ].map((link, i) => (
+              <Fragment key={link.href}>
+                <Link href={link.href} prefetch className='group w-full'>
+                  <button
+                    className={clsx(
+                      'flex h-full w-full items-center justify-start gap-3 py-6 text-2xl',
+                      mobileLabelInset,
+                      'hover:cursor-pointer hover:bg-(--border-color) md:justify-center md:pl-0',
+                    )}
+                    onClick={() => playClick()}
+                  >
+                    <span lang='ja' className={characterTileClassName()}>
+                      {link.nameJa}
+                    </span>
+                    <span lang='en' className='leading-none'>
+                      {link.name}
+                    </span>
+                    {link.badge !== null && (
+                      <span className='rounded-full bg-(--main-color) px-2 py-0.5 text-sm text-(--background-color)'>
+                        {link.badge}
+                      </span>
+                    )}
+                  </button>
+                </Link>
+                {i === 0 && (
+                  <div className='w-full border-t-1 border-(--border-color) md:h-auto md:w-0 md:border-l-1' />
+                )}
+              </Fragment>
+            ))}
           </div>
         </div>
       </div>
@@ -354,7 +409,8 @@ const MainMenu = () => {
               key={i}
               className={clsx(
                 'flex flex-row items-center gap-1 text-(--secondary-color) hover:cursor-pointer hover:text-(--main-color)',
-                (link.name === 'credits' || link.name === 'about') && 'hidden sm:flex',
+                (link.name === 'credits' || link.name === 'about') &&
+                  'hidden sm:flex',
               )}
               onClick={() => playClick()}
             >
@@ -377,12 +433,8 @@ const MainMenu = () => {
           className='h-8 w-auto p-1'
         />
       </a> */}
-      {/* {showBanner && (
-        <NightlyBanner onSwitch={handleSwitch} onDismiss={handleDismiss} />
-      )} */}
     </div>
   );
 };
 
 export default MainMenu;
-

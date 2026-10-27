@@ -40,6 +40,7 @@ const NAMESPACES = [
   'kanaChart',
   'conjugator',
   'resources',
+  'beginner',
 ];
 
 /**

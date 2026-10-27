@@ -2,10 +2,10 @@
   "menu": {
     "lesson": "Today's Lesson",
     "phrases": "Friends & Family",
-    "reviewsDue": "{{count}} reviews due"
+    "reviewsDue": "{count, plural, one {# review due} other {# reviews due}}"
   },
   "audio": {
-    "play": "Play {{text}}",
+    "play": "Play {text}",
     "pronunciationOff": "Pronunciation is turned off in settings. Turn it on to hear Japanese."
   },
   "listening": {
@@ -21,7 +21,7 @@
     "needSelection": "Pick at least two kana first.",
     "backToKana": "Choose kana",
     "correct": "Correct",
-    "incorrect": "Not quite. It was {{kana}} ({{romaji}}).",
+    "incorrect": "Not quite. It was {kana} ({romaji}).",
     "next": "Next",
     "emptyGroups": "Select a few kana groups, then start Listening from Kana practice."
   },
@@ -36,7 +36,7 @@
     "hard": "Hard",
     "good": "Good",
     "easy": "Easy",
-    "due": "{{count}} reviews due",
+    "due": "{count, plural, one {# review due} other {# reviews due}}",
     "noneDue": "No reviews due",
     "done": "You're caught up for now.",
     "back": "Home",
@@ -44,13 +44,13 @@
   },
   "lesson": {
     "title": "Today's Lesson",
-    "day": "Day {{day}}",
-    "of": "Day {{day}} of {{total}}",
+    "day": "Day {day}",
+    "of": "Day {day} of {total}",
     "kanaHeading": "New kana",
     "phraseHeading": "Say these",
     "start": "Start practice",
     "resume": "Resume",
-    "reviews": "{{count}} reviews due",
+    "reviews": "{count, plural, one {# review due} other {# reviews due}}",
     "reviewNow": "Review due cards",
     "practicePromptKana": "What sound is this?",
     "practicePromptPhrase": "What does this mean?",

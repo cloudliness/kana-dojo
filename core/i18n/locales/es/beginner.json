@@ -2,10 +2,10 @@
   "menu": {
     "lesson": "Lección de hoy",
     "phrases": "Amigos y familia",
-    "reviewsDue": "{{count}} repasos pendientes"
+    "reviewsDue": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}"
   },
   "audio": {
-    "play": "Reproducir {{text}}",
+    "play": "Reproducir {text}",
     "pronunciationOff": "La pronunciación está desactivada en ajustes. Actívala para oír japonés."
   },
   "listening": {
@@ -21,7 +21,7 @@
     "needSelection": "Elige al menos dos kana primero.",
     "backToKana": "Elegir kana",
     "correct": "Correcto",
-    "incorrect": "Casi. Era {{kana}} ({{romaji}}).",
+    "incorrect": "Casi. Era {kana} ({romaji}).",
     "next": "Siguiente",
     "emptyGroups": "Selecciona algunos grupos de kana y luego empieza Escucha desde la práctica de kana."
   },
@@ -36,7 +36,7 @@
     "hard": "Difícil",
     "good": "Bien",
     "easy": "Fácil",
-    "due": "{{count}} repasos pendientes",
+    "due": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}",
     "noneDue": "No hay repasos pendientes",
     "done": "Estás al día por ahora.",
     "back": "Inicio",
@@ -44,13 +44,13 @@
   },
   "lesson": {
     "title": "Lección de hoy",
-    "day": "Día {{day}}",
-    "of": "Día {{day}} de {{total}}",
+    "day": "Día {day}",
+    "of": "Día {day} de {total}",
     "kanaHeading": "Kana nuevos",
     "phraseHeading": "Di esto",
     "start": "Empezar práctica",
     "resume": "Continuar",
-    "reviews": "{{count}} repasos pendientes",
+    "reviews": "{count, plural, one {# repaso pendiente} other {# repasos pendientes}}",
     "reviewNow": "Repasar tarjetas pendientes",
     "practicePromptKana": "¿Qué sonido es este?",
     "practicePromptPhrase": "¿Qué significa esto?",
